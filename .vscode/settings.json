@@ -1,0 +1,13 @@
+{
+  "python.pythonPath": "/home/ayush/miniconda3/bin/python",
+  "python.linting.pylintEnabled": true,
+  "python.linting.enabled": true,
+  "python.linting.pylintArgs": [
+    "--indent-string='  '"
+  ],
+  "python.formatting.autopep8Args": [
+    "--indent-size=2"
+  ],
+  "python.formatting.provider": "autopep8",
+  "editor.formatOnSave": true
+}
