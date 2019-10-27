@@ -23,20 +23,23 @@ class CNNAutoEncoder(nn.Module):
     self.input_size = input_size  # assume input size is 65536 (2^16)
 
     self.encoder_model = nn.Sequential(OrderedDict([
-        ('conv1', nn.Conv1d(1, 256, kernel_size=128, stride=16)),  # size (2^12)
-        ('conv2', nn.Conv1d(256, 256, kernel_size=128, stride=16)),  # size (2^8)
-        ('conv3', nn.Conv1d(256, 512, kernel_size=128, stride=16)),  # size (2^4)
+        ('conv1', nn.Conv1d(1, 256, kernel_size=128, stride=64)),  # size (2^8)
+        ('conv2', nn.Conv1d(256, 256, kernel_size=7, stride=2)),  # size (2)
+        ('conv3', nn.Conv1d(256, 512, kernel_size=7, stride=2)),  # size (2^4)
+        ('conv4', nn.Conv1d(512, 1024, kernel_size=7, stride=2)),  # size (2^4)
     ]))
 
     # size after this = (N, 512, 8)
 
     self.decoder_model = nn.Sequential(OrderedDict([
-        ('convT1', nn.ConvTranspose1d(
-            512, 256, kernel_size=128, stride=16, output_padding=8)),
-        ('convT2', nn.ConvTranspose1d(
-            256, 256, kernel_size=128, stride=16, output_padding=9)),
+        ('convT4', nn.ConvTranspose1d(
+            1024, 512, kernel_size=7, stride=2, output_padding=1)),  # size (2^4)
         ('convT3', nn.ConvTranspose1d(
-            256, 1, kernel_size=128, stride=16)),
+            512, 256, kernel_size=7, stride=2)),
+        ('convT2', nn.ConvTranspose1d(
+            256, 256, kernel_size=7, stride=2)),
+        ('convT1', nn.ConvTranspose1d(
+            256, 1, kernel_size=128, stride=64)),
     ]))
 
     self.loss_criterion = nn.MSELoss()  # mean squared error loss
