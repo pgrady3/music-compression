@@ -21,15 +21,15 @@ if __name__ == '__main__':
 
   input_data = torch.reshape(input_data, (1, 1, -1))
 
-  for epoch in range(100000):
+  #
 
-    optimizer.zero_grad()
-    output_data = model.forward(input_data)
+  optimizer.zero_grad()
+  encoded_data = model.forward_encoder(input_data)
+  print(encoded_data.shape)
+  decoded_data = model.decoder_model(encoded_data)
+  print(decoded_data.shape)
 
-    loss = model.loss(input_data, output_data)
+  #loss = model.loss(input_data, output_data)
 
-    loss.backward()
-    optimizer.step()
-
-    if epoch % 100 == 0:
-      print('Epoch:{}, Loss:{:.4f}'.format(epoch+1, float(loss)))
+  # loss.backward()
+  # optimizer.step()
