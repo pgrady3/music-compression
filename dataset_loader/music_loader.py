@@ -16,21 +16,32 @@ class MusicLoader(data.Dataset):
   train_folder = 'train'
   test_folder = 'test'
 
-  def __init__(self, root_dir, split='train', transform=None, val_samples=100):
+  def __init__(self, root_dir, split='train', transform=None):
     self.root = os.path.expanduser(root_dir)
     self.transform = transform
     self.split = split
 
-    self.train_files = glob.glob(os.path.join(
-        root_dir, self.train_folder, '*.pt'
-    ))
+    if split == 'train':
+      self.curr_folder = self.train_folder
+    elif split == 'test':
+      self.curr_folder = self.test_folder
 
-    self.test_files = glob.glob(os.path.join(
-        root_dir, self.test_folder, '*.pt'
-    ))
+    self.data_concat = torch.load(
+        os.path.join(
+            root_dir, self.curr_folder, 'concat.pt'
+        )
+    )
+
+    self.data_len = self.data_concat.shape[0]
 
     self.mean_val = torch.load(os.path.join(root_dir, 'mean.pt'))
     self.std_val = torch.load(os.path.join(root_dir, 'std.pt'))
+
+    # normalizing the data
+    self.data_concat = torch.reshape(
+        (self.data_concat - self.mean_val)/self.std_val,
+        (self.data_len, 1, -1)
+    )
 
   def __getitem__(self, index):
     """
@@ -39,21 +50,8 @@ class MusicLoader(data.Dataset):
     Returns:
         tuple: (image, target) where target is index of the target class.
     """
-    if self.split == 'train':
-      tensor = (torch.load(
-          self.train_files[index]) - self.mean_val)/self.std_val
-    elif self.split == 'val':
-      raise NotImplementedError
-    elif self.split == 'test':
-      tensor = (torch.load(
-          self.test_files[index]) - self.mean_val)/self.std_val
 
-    return torch.reshape(tensor, (1, -1))
+    return self.data_concat[index, :, :]
 
   def __len__(self):
-    if self.split == 'train':
-      return len(self.train_files)
-    elif self.split == 'val':
-      raise NotImplementedError
-    elif self.split == 'test':
-      return len(self.test_files)
+    return self.data_len
