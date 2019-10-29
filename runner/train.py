@@ -27,11 +27,11 @@ class Trainer(object):
     dataloader_args = {'num_workers': 2, 'pin_memory': True} if cuda else {}
 
     self.train_dataset = MusicLoader('data/sample/061/', split='train')
-    self.train_loader = torch.utils.data.DataLoader(self.train_dataset, batch_size=100, shuffle=True,
+    self.train_loader = torch.utils.data.DataLoader(self.train_dataset, batch_size=batch_size, shuffle=True,
                                                     **dataloader_args)
 
     self.test_dataset = MusicLoader('data/sample/061/', split='test')
-    self.test_loader = torch.utils.data.DataLoader(self.test_dataset, batch_size=100, shuffle=True,
+    self.test_loader = torch.utils.data.DataLoader(self.test_dataset, batch_size=batch_size, shuffle=True,
                                                    **dataloader_args
                                                    )
 
@@ -78,6 +78,7 @@ class Trainer(object):
       if epoch_idx % 10 == 0:
         print('Epoch:{}, Loss:{:.4f}'.format(epoch_idx+1, float(loss)))
         self.eval_on_test()
+        self.model.train()
         self.save_model()
 
   def eval_on_test(self):
