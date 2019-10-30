@@ -23,30 +23,20 @@ class CNNAutoEncoder(nn.Module):
     self.input_size = input_size  # assume input size is 65536 (2^16)
 
     self.encoder_model = nn.Sequential(OrderedDict([
-        ('conv1', nn.Conv1d(1, 64, kernel_size=256, stride=128)),
+        ('conv1', nn.Conv1d(1, 64, kernel_size=512, stride=256, padding=0)),
         ('relu1', nn.ReLU(inplace=True)),
-        ('conv2', nn.Conv1d(64, 32, kernel_size=7, stride=2)),
-        ('relu2', nn.ReLU(inplace=True))
-
+        ('conv2', nn.Conv1d(64, 32, kernel_size=1, stride=1)),
+        ('relu2', nn.ReLU(inplace=True)),
     ]))
 
     # size after this = (N, 16, )
 
     self.decoder_model = nn.Sequential(OrderedDict([
-        # ('convT6', nn.ConvTranspose1d(
-        #     512, 512, kernel_size=7, stride=2)),  # size (2^4)
-        # ('reluT6', nn.ReLU(inplace=True)),
-        # ('convT5', nn.ConvTranspose1d(
-        #     512, 512, kernel_size=7, stride=2)),  # size (2^4)
-        # ('reluT5', nn.ReLU(inplace=True)),
-        # ('convT4', nn.ConvTranspose1d(
-        #     512, 512, kernel_size=7, stride=2, output_padding=1)),  # size (2^4)
-        # ('reluT4', nn.ReLU(inplace=True)),
-        ('convT3', nn.ConvTranspose1d(
-            32, 32, kernel_size=7, stride=2)),
-        ('reluT3', nn.ReLU(inplace=True)),
+        ('convT2', nn.ConvTranspose1d(
+            32, 64, kernel_size=1, stride=1, output_padding=0)),
+        ('reluT2', nn.ReLU(inplace=True)),
         ('convT1', nn.ConvTranspose1d(
-            32, 1, kernel_size=256, stride=128, output_padding=0)),
+            64, 1, kernel_size=512, stride=256, output_padding=0)),
     ]))
 
     self.loss_criterion = nn.MSELoss(
@@ -69,20 +59,19 @@ class CNNAutoEncoder(nn.Module):
     '''
     Computes the loss between input and output data
     '''
-
     if normalize:
       return self.loss_criterion(output_data, input_data)/(input_data.shape[0]*input_data.shape[2])
 
     return self.loss_criterion(output_data, input_data)/input_data.shape[2]
 
-    # # move to spectral loss
+    # move to spectral loss
     # input_fft_mag = torch.log(
-    #     torch.sum(torch.stft(torch.squeeze(input_data, dim=1), 512,
-    #                          normalized=True)**2, dim=3).view(input_data.shape[0], -1)
+    #     torch.sum(torch.stft(torch.squeeze(input_data, dim=1), 1024,
+    #                          normalized=True)**2, dim=3).view(input_data.shape[0], -1) + 1e-8
     # )
     # output_fft_mag = torch.log(
-    #     torch.sum(torch.stft(torch.squeeze(output_data, dim=1), 512,
-    #                          normalized=True)**2, dim=3).view(input_data.shape[0], -1)
+    #     torch.sum(torch.stft(torch.squeeze(output_data, dim=1), 1024,
+    #                          normalized=True)**2, dim=3).view(input_data.shape[0], -1) + 1e-8
     # )
 
     # if normalize:
