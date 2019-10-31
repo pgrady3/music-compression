@@ -15,7 +15,7 @@ class Trainer(object):
   This class makes training the model easier
   '''
 
-  def __init__(self, model_dir, batch_size=100, load_from_disk=True, cuda=False):
+  def __init__(self, data_dir, model_dir, batch_size=100, load_from_disk=True, cuda=False):
     self.model_dir = model_dir
 
     self.model = CNNAutoEncoder()
@@ -26,11 +26,11 @@ class Trainer(object):
 
     dataloader_args = {'num_workers': 2, 'pin_memory': True} if cuda else {}
 
-    self.train_dataset = MusicLoader('data/sample/061/', split='train')
+    self.train_dataset = MusicLoader(data_dir, split='train')
     self.train_loader = torch.utils.data.DataLoader(self.train_dataset, batch_size=batch_size, shuffle=True,
                                                     **dataloader_args)
 
-    self.test_dataset = MusicLoader('data/sample/061/', split='test')
+    self.test_dataset = MusicLoader(data_dir, split='test')
     self.test_loader = torch.utils.data.DataLoader(self.test_dataset, batch_size=batch_size, shuffle=True,
                                                    **dataloader_args
                                                    )
