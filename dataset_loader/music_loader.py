@@ -53,7 +53,7 @@ class MusicLoader(data.Dataset):
     # randomly select a portion from the raw_audio
     start_idx = random.randint(0, raw_audio.size-self.snippet_size-1)
 
-    return ((torch.FloatTensor(raw_audio[start_idx:start_idx+self.snippet_size]) - self.mean_val)/self.std_val).reshape(1, 1, -1)
+    return ((torch.FloatTensor(raw_audio[start_idx:start_idx+self.snippet_size]) - self.mean_val)/self.std_val).reshape(1, -1)
 
   def __len__(self):
     return self.data_len
