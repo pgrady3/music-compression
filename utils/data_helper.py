@@ -32,7 +32,14 @@ def stat_all_files(base_dir):
 
   data_list = []
   for f in file_names:
+    try:
     _, raw_audio = read_mp3(f)
+
+    if(raw_audio.size < 65536):
+      print(f)
+    except Exception:
+      print('cannot read file', f)
+      continue
     data_list.append(torch.FloatTensor(raw_audio))
 
   # concatenate everything
@@ -49,5 +56,5 @@ def stat_all_files(base_dir):
 
 
 if __name__ == '__main__':
-  stat_all_files('data/sample/061/')
+  stat_all_files('data/sample/fma_xs/')
   # generate_concat_tensor('data/sample/061/test')

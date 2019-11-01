@@ -15,18 +15,20 @@ def read_mp3(file_name, normalized=False):
   a = pydub.AudioSegment.from_mp3(file_name)
   y = np.array(a.get_array_of_samples())
   if a.channels == 2:
-    y = y.reshape((-1, 2))
+    y = preprocess_audio(y.reshape((-1, 2)))
   if normalized:
     return a.frame_rate, np.float32(y) / 2**15
   else:
-    return a.frame_rate, preprocess_audio(y)
+    return a.frame_rate, y
 
 
-def preprocess_audio(input):
+def preprocess_audio(input_vec):
   '''
   Convert to single channel data
   '''
-  return np.mean(input, axis=1)
+  if len(list(input_vec.shape)) == 1:
+    return input_vec
+  return np.mean(input_vec, axis=1)
 
 
 def write_mp3(f, sr, x, normalized=False):
@@ -50,21 +52,14 @@ def convert_audio_to_tensors(file_dir):
       os.path.join(file_dir, '*.mp3')
   )
 
-  snippet_size = 65536
-  block_size = 10000
-
   for f in files:
-    framerate, audio = read_mp3(f)
+    _, audio = read_mp3(f)
 
-    print('Framerate = {}'.format(framerate))
     output_name = os.path.join(
-        file_dir, os.path.basename(f).split('.')[0] + '_{}.pt')
+        file_dir, os.path.basename(f).split('.')[0] + '.pt'
+    )
 
-    counter = 0
-    for idx in range(0, audio.shape[0]-snippet_size, block_size):
-      torch.save(torch.tensor(audio[idx:idx+snippet_size], dtype=torch.float32),
-                 output_name.format(counter))
-      counter += 1
+    torch.save(torch.tensor(audio, dtype=torch.float32), output_name)
 
 
 if __name__ == '__main__':
