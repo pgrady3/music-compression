@@ -66,17 +66,14 @@ class Trainer(object):
           input_data = Variable(batch)
 
         self.optimizer.zero_grad()
-
         output_data = self.model.forward(input_data)
-
         loss = self.model.loss(input_data, output_data)
-        self.train_loss_history.append(float(loss))
-
         loss.backward()
         self.optimizer.step()
 
       if epoch_idx % 10 == 0:
         print('Epoch:{}, Loss:{:.4f}'.format(epoch_idx+1, float(loss)))
+        self.train_loss_history.append(float(loss))
         self.eval_on_test()
         self.model.train()
         self.save_model()
