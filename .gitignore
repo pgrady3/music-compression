@@ -107,3 +107,6 @@ venv.bak/
 
 # remove the full data folder itself
 data/
+
+# ignoring cached model 
+model_checkpoints/
