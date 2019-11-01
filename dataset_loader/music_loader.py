@@ -8,7 +8,7 @@ import random
 import torch
 import torch.utils.data as data
 
-from utils.io import read_mp3
+from utils.io import convert_audio_to_tensors
 
 
 class MusicLoader(data.Dataset):
@@ -31,8 +31,13 @@ class MusicLoader(data.Dataset):
     elif split == 'test':
       self.curr_folder = self.test_folder
 
+    # convert all mp3 files to torch tensors
+    # TODO: optimize the conversion
+    if len(glob.glob(os.path.join(root_dir, self.curr_folder, '*.pt'))) == 0:
+      convert_audio_to_tensors(os.path.join(root_dir, self.curr_folder))
+
     self.file_names = glob.glob(
-        os.path.join(root_dir, self.curr_folder, '*.mp3')
+        os.path.join(root_dir, self.curr_folder, '*.pt')
     )
 
     self.data_len = len(self.file_names)
@@ -48,12 +53,12 @@ class MusicLoader(data.Dataset):
         tuple: (image, target) where target is index of the target class.
     """
 
-    _, raw_audio = read_mp3(self.file_names[index])
+    raw_audio = torch.load(self.file_names[index])
 
     # randomly select a portion from the raw_audio
     start_idx = random.randint(0, raw_audio.size-self.snippet_size-1)
 
-    return ((torch.FloatTensor(raw_audio[start_idx:start_idx+self.snippet_size]) - self.mean_val)/self.std_val).reshape(1, -1)
+    return ((raw_audio[start_idx:start_idx+self.snippet_size] - self.mean_val)/self.std_val).reshape(1, -1)
 
   def __len__(self):
     return self.data_len
