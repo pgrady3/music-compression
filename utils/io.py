@@ -53,18 +53,29 @@ def convert_audio_to_tensors(file_dir):
   )
 
   for f in files:
-    _, audio = read_mp3(f)
+    try:
+      print("Converting", f)
+      _, audio = read_mp3(f)
 
-    output_name = os.path.join(
-        file_dir, os.path.basename(f).split('.')[0] + '.pt'
-    )
+      output_name = os.path.join(
+          file_dir, os.path.basename(f).split('.')[0] + '.pt'
+      )
 
-    torch.save(torch.tensor(audio, dtype=torch.float32), output_name)
+      torch.save(torch.tensor(audio, dtype=torch.float32), output_name)
+    except Exception as ex:
+      print(ex)
 
 
 if __name__ == '__main__':
-  # framerate, audio = read_mp3('data/individual_samples/sample1.mp3')
 
+  files = glob.glob(
+      os.path.join('data/fma_xs/test/*.mp3')
+  )
+
+  # for f in files:
+  #   framerate, audio = read_mp3(f)
+  #   print(framerate)
   # print(np.nonzero(audio))
 
-  convert_audio_to_tensors('data/sample/061/train/')
+  convert_audio_to_tensors('data/fma_xs/train/')
+  convert_audio_to_tensors('data/fma_xs/test/')
