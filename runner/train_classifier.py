@@ -35,7 +35,7 @@ class TrainerClassifier(object):
                                                    **dataloader_args
                                                    )
 
-    self.optimizer = torch.optim.Adam(self.model.parameters(),
+    self.optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, self.model.parameters()),
                                       lr=1e-5,
                                       weight_decay=1e-5)
 
@@ -120,7 +120,7 @@ class TrainerClassifier(object):
       num_examples += input_data.shape[0]
       output_data = self.model.forward(input_data)
       predicted_labels = torch.argmax(output_data, dim=1)
-      num_correct += torch.sum(predicted_labels == target_data).cpu()
+      num_correct += torch.sum(predicted_labels == target_data).cpu().item()
 
     return float(num_correct)/float(num_examples)
 
