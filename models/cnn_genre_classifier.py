@@ -44,7 +44,7 @@ class CNNGenreClassifier(nn.Module):
     self.fc_layers = nn.Sequential(OrderedDict([
         ('fc1', nn.Linear(288, 100)),
         ('relu1', nn.ReLU(inplace=True)),
-        ('fc2', nn.Linear(100, 16)),
+        ('fc2', nn.Linear(100, 8)),
     ]))
 
     self.loss_criterion = nn.CrossEntropyLoss(reduction='sum')
@@ -58,11 +58,11 @@ class CNNGenreClassifier(nn.Module):
     '''
     autoencoder_checkpoint = torch.load(autoencoder_checkpoint_path)
 
-    self.encoder_model[0].weight.requires_grad = False
-    self.encoder_model[0].bias.requires_grad = False
+    self.encoder_model[0].weight.requires_grad = True
+    self.encoder_model[0].bias.requires_grad = True
 
-    self.encoder_model[2].weight.requires_grad = False
-    self.encoder_model[2].bias.requires_grad = False
+    self.encoder_model[2].weight.requires_grad = True
+    self.encoder_model[2].bias.requires_grad = True
 
     self_state = self.state_dict()
     for name, param in autoencoder_checkpoint['model_state_dict'].items():
