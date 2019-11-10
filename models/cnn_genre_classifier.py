@@ -25,11 +25,14 @@ class CNNGenreClassifier(nn.Module):
 
     self.input_size = input_size  # assume input size is 65536 (2^16)
 
-    self.cnn_layers = nn.Sequential(OrderedDict([
+    self.encoder_model = nn.Sequential(OrderedDict([
         ('conv1', nn.Conv1d(1, 64, kernel_size=512, stride=256, padding=0)),
         ('relu1', nn.ReLU(inplace=True)),
         ('conv2', nn.Conv1d(64, 32, kernel_size=1, stride=1)),
         ('relu2', nn.ReLU(inplace=True)),
+    ]))
+
+    self.cnn_layers = nn.Sequential(OrderedDict([
         ('conv4', nn.Conv1d(32, 32, kernel_size=5, stride=1)),
         ('relu4', nn.ReLU(inplace=True)),
         ('maxpool5', nn.MaxPool1d(kernel_size=5, stride=5)),
@@ -55,16 +58,17 @@ class CNNGenreClassifier(nn.Module):
     '''
     autoencoder_checkpoint = torch.load(autoencoder_checkpoint_path)
 
-    self.cnn_layers[0].weight.requires_grad = False
-    self.cnn_layers[0].bias.requires_grad = False
+    self.encoder_model[0].weight.requires_grad = False
+    self.encoder_model[0].bias.requires_grad = False
 
-    self.cnn_layers[2].weight.requires_grad = False
-    self.cnn_layers[2].bias.requires_grad = False
+    self.encoder_model[2].weight.requires_grad = False
+    self.encoder_model[2].bias.requires_grad = False
 
     self_state = self.state_dict()
     for name, param in autoencoder_checkpoint['model_state_dict'].items():
       if name not in self_state:
         continue
+      print('copying params from ', name)
       self_state[name].copy_(param)
 
   def forward(self, inputs):
@@ -75,7 +79,7 @@ class CNNGenreClassifier(nn.Module):
       - inputs: The music input data. Dimension: N*D*1
     '''
 
-    return self.fc_layers(self.cnn_layers(inputs).view(inputs.shape[0], -1))
+    return self.fc_layers(self.cnn_layers(self.encoder_model(inputs)).view(inputs.shape[0], -1))
 
   def loss(self, input_data, output_data, normalize=True):
     '''
