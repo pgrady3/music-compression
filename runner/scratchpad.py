@@ -23,7 +23,7 @@ if __name__ == '__main__':
   # # loss.backward()
   # # optimizer.step()
 
-  model = CNNGenreClassifier()
+  model = CNNGenreClassifier(init_from_autoencoder_flag=False)
 
   _, input_data = read_mp3('data/sample/061/train/061006.mp3')
 

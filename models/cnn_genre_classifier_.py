@@ -36,15 +36,13 @@ class CNNGenreClassifier(nn.Module):
         ('conv4', nn.Conv1d(32, 32, kernel_size=5, stride=1)),
         ('relu4', nn.ReLU(inplace=True)),
         ('maxpool5', nn.MaxPool1d(kernel_size=5, stride=5)),
-        ('conv6', nn.Conv1d(32, 32, kernel_size=5, stride=1)),
+        ('conv6', nn.Conv1d(32, 16, kernel_size=5, stride=1)),
         ('relu6', nn.ReLU(inplace=True)),
-        ('maxpool7', nn.MaxPool1d(kernel_size=5, stride=5))
+        ('maxpool7', nn.MaxPool1d(kernel_size=10, stride=10))
     ]))
 
     self.fc_layers = nn.Sequential(OrderedDict([
-        ('fc1', nn.Linear(288, 100)),
-        ('relu1', nn.ReLU(inplace=True)),
-        ('fc2', nn.Linear(100, 8)),
+        ('fc1', nn.Linear(64, 8)),
     ]))
 
     self.loss_criterion = nn.CrossEntropyLoss(reduction='sum')
@@ -58,11 +56,11 @@ class CNNGenreClassifier(nn.Module):
     '''
     autoencoder_checkpoint = torch.load(autoencoder_checkpoint_path)
 
-    self.encoder_model[0].weight.requires_grad = False
-    self.encoder_model[0].bias.requires_grad = False
+    self.encoder_model[0].weight.requires_grad = True
+    self.encoder_model[0].bias.requires_grad = True
 
-    self.encoder_model[2].weight.requires_grad = False
-    self.encoder_model[2].bias.requires_grad = False
+    self.encoder_model[2].weight.requires_grad = True
+    self.encoder_model[2].bias.requires_grad = True
 
     self_state = self.state_dict()
     for name, param in autoencoder_checkpoint['model_state_dict'].items():
@@ -70,8 +68,9 @@ class CNNGenreClassifier(nn.Module):
         continue
       print('copying params from ', name)
 
-      param_norm = torch.norm(param)
-      self_state[name].copy_(param/param_norm)
+      #param_norm = torch.norm(param)
+      # self_state[name].copy_(param/param_norm)
+      self_state[name].copy_(param)
 
   def forward(self, inputs):
     '''

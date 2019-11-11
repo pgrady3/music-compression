@@ -54,7 +54,7 @@ def convert_audio_to_tensors(file_dir):
 
   for f in files:
     try:
-      print("Converting", f)
+      # print("Converting", f)
       _, audio = read_mp3(f)
 
       output_name = os.path.join(

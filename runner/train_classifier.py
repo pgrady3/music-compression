@@ -18,7 +18,7 @@ class TrainerClassifier(object):
   def __init__(self, data_dir, model_dir, batch_size=100, load_from_disk=True, cuda=False):
     self.model_dir = model_dir
 
-    self.model = CNNGenreClassifier()
+    self.model = CNNGenreClassifier(init_from_autoencoder_flag=True)
 
     self.cuda = cuda
     if cuda:
@@ -35,10 +35,10 @@ class TrainerClassifier(object):
                                                    **dataloader_args
                                                    )
 
-    self.optimizer = torch.optim.Adam(self.model.parameters(),
+    self.optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, self.model.parameters()),
                                       lr=1e-5,
                                       weight_decay=1e-5)
-
+    print(self.optimizer)
     self.train_loss_history = []
     self.test_loss_history = []
 
@@ -120,7 +120,7 @@ class TrainerClassifier(object):
       num_examples += input_data.shape[0]
       output_data = self.model.forward(input_data)
       predicted_labels = torch.argmax(output_data, dim=1)
-      num_correct += torch.sum(predicted_labels == target_data).cpu()
+      num_correct += torch.sum(predicted_labels == target_data).cpu().item()
 
     return float(num_correct)/float(num_examples)
 
