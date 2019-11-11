@@ -11,7 +11,7 @@ import librosa.core as lc
 from utils.io import convert_audio_to_tensors
 
 
-class MusicLoader(data.Dataset):
+class MusicLoaderSTFT(data.Dataset):
   '''
   Class for data loading
   '''
@@ -83,6 +83,10 @@ class MusicLoader(data.Dataset):
     ft = lc.stft(signal)
     ft = np.abs(ft)
     spectrogram = np.log(ft)  # Conver to DB
+
+    # Add dimension to comply with Conv2D
+    spectrogram = np.expand_dims(spectrogram, axis=0)
+
     return spectrogram
 
   def __len__(self):
