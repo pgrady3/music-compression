@@ -65,7 +65,8 @@ class MusicGenreLoader(data.Dataset):
     raw_audio = torch.load(self.file_names[index])
 
     # randomly select a portion from the raw_audio
-    start_idx = random.randint(0, raw_audio.numel()-self.snippet_size-1)
+    start_idx = int((random.randint(0, raw_audio.numel()-self.snippet_size-1)/100.0)*100)
+
 
     return (
         ((raw_audio[start_idx:start_idx+self.snippet_size] -
