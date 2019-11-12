@@ -33,6 +33,7 @@ class CNNGenreClassifier(nn.Module):
     ]))
 
     self.cnn_layers = nn.Sequential(OrderedDict([
+        ('ln3', nn.LayerNorm((32,255))),
         ('conv4', nn.Conv1d(32, 32, kernel_size=5, stride=1)),
         ('relu4', nn.ReLU(inplace=True)),
         ('maxpool5', nn.MaxPool1d(kernel_size=5, stride=5)),
@@ -70,8 +71,14 @@ class CNNGenreClassifier(nn.Module):
         continue
       print('copying params from ', name)
 
-      param_norm = torch.norm(param)
-      self_state[name].copy_(param/param_norm)
+      self_state[name].copy_(param)
+
+  def unfreeze_layers(self):
+    self.encoder_model[0].weight.requires_grad = True
+    self.encoder_model[0].bias.requires_grad = True
+
+    self.encoder_model[2].weight.requires_grad = True
+    self.encoder_model[2].bias.requires_grad = True
 
   def forward(self, inputs):
     '''
