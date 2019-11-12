@@ -8,6 +8,7 @@ import torch.utils.data as data
 import matplotlib.pyplot as plt
 import numpy as np
 import librosa.core as lc
+import csv
 from utils.io import convert_audio_to_tensors
 
 
@@ -42,8 +43,11 @@ class MusicLoaderSTFT(data.Dataset):
 
     self.data_len = len(self.file_names)
 
-    # self.mean_val = torch.load(os.path.join(root_dir, 'mean.pt'))
-    # self.std_val = torch.load(os.path.join(root_dir, 'std.pt'))
+    self.labels = {}  # Create labels dict from CSV
+    with open(os.path.join(root_dir, 'file_to_labels.csv'), 'r')as f:
+      data = csv.reader(f)
+      for row in data:
+        self.labels[int(row[0])] = int(row[1])
 
   def spec_to_audio(self, spectrogram, index=None):
     # If no index is given, then no phase information is reconstructed
@@ -58,8 +62,6 @@ class MusicLoaderSTFT(data.Dataset):
 
     # randomly select a portion from the raw_audio
     start_idx = np.random.randint(0, raw_audio.numel()-self.snippet_size-1)
-    # start_idx = 50000  # Make deterministic so we can reconstruct
-
     snippet = raw_audio[start_idx:start_idx+self.snippet_size]
 
     return snippet.data.numpy()
@@ -78,7 +80,11 @@ class MusicLoaderSTFT(data.Dataset):
     spectrogram[0, :, :] = np.real(ft)
     spectrogram[1, :, :] = np.imag(ft)
 
-    return spectrogram
+    file_num = self.file_names[index].split('/')[-1]
+    file_num = file_num.split('.')[0]
+    label = self.labels[int(file_num)]
+
+    return spectrogram, label
 
   def __len__(self):
     return self.data_len

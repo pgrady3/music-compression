@@ -1,7 +1,8 @@
 import os
+import torch
 import torch.utils
 from torch.autograd import Variable
-from models.frequency_autoencoder import FrequencyAutoencoder
+from models.frequency_autoencoder import FrequencyAutoencoder, Classifier
 from dataset_loader.music_loader_stft import MusicLoaderSTFT
 
 import matplotlib.pyplot as plt
@@ -12,16 +13,18 @@ class TrainerFrequencyAutoencoder(object):
   This class makes training the model easier
   '''
 
-  def __init__(self, data_dir, model_dir, batch_size=1, load_from_disk=False, cuda=False):
+  def __init__(self, data_dir, model_dir, batch_size=16, load_from_disk=False, cuda=False):
     self.model_dir = model_dir
 
     self.model = FrequencyAutoencoder()
+    self.model_classifier = Classifier()
 
     self.cuda = cuda
     if cuda:
       self.model.cuda()
+      self.model_classifier.cuda()
 
-    dataloader_args = {'num_workers': 2, 'pin_memory': True} if cuda else {}
+    dataloader_args = {'num_workers': 4, 'pin_memory': True} if cuda else {}
 
     self.train_dataset = MusicLoaderSTFT(data_dir, split='train')
     self.train_loader = torch.utils.data.DataLoader(self.train_dataset, batch_size=batch_size, shuffle=True,
@@ -33,7 +36,7 @@ class TrainerFrequencyAutoencoder(object):
                                                    )
 
     self.optimizer = torch.optim.Adam(self.model.parameters(),
-                                      lr=1e-5,
+                                      lr=1e-4,
                                       weight_decay=1e-5)
 
     self.train_loss_history = []
@@ -56,23 +59,65 @@ class TrainerFrequencyAutoencoder(object):
   def train(self, num_epochs):
     self.model.train()
     for epoch_idx in range(num_epochs):
-      for batch_idx, batch in enumerate(self.train_loader):
+      running_loss = 0.0
+      num_examples = 0
+
+      for batch, labels in self.train_loader:
         if self.cuda:
           input_data = Variable(batch).cuda()
         else:
           input_data = Variable(batch)
 
         self.optimizer.zero_grad()
-        output_data = self.model.forward(input_data)
+        output_data, latent_data = self.model.forward(input_data)
         loss = self.model.loss_criterion(input_data, output_data)
         loss.backward()
         self.optimizer.step()
+        running_loss += loss.item() * input_data.size(0)
+        num_examples += input_data.shape[0]
 
-      print('Epoch:{}, Loss:{:.4f}'.format(epoch_idx+1, float(loss)))
+      print('Epoch:{}, Loss:{:.4f}'.format(
+          epoch_idx+1, running_loss / num_examples))
       self.train_loss_history.append(float(loss))
       self.eval_on_test()
       self.model.train()
       self.save_model()
+
+  def train_classifier(self, num_epochs):
+    self.model.eval()
+    for params in self.model.parameters():
+      params.requires_grad = False
+
+    self.model_classifier.train()
+
+    for epoch_idx in range(num_epochs):
+      running_loss = 0.0
+      num_examples = 0
+
+      for batch, labels in self.train_loader:
+        if self.cuda:
+          input_data = Variable(batch).cuda()
+          label_data = Variable(labels).cuda()
+        else:
+          input_data = Variable(batch)
+          label_data = Variable(labels)
+
+        self.optimizer.zero_grad()
+        output_data, latent_data = self.model.forward(input_data)
+        class_output = self.model_classifier.forward(latent_data)
+
+        loss = self.model_classifier.loss_criterion(class_output, label_data)
+        loss.backward()
+        self.optimizer.step()
+
+        running_loss += loss.item() * input_data.size(0)
+        num_examples += input_data.shape[0]
+
+      print('Epoch:{}, Loss:{:.4f}'.format(
+          epoch_idx+1, running_loss / num_examples))
+      self.train_loss_history.append(float(loss))
+      self.eval_classifier()
+      self.model_classifier.train()
 
   def eval_on_test(self):
     self.model.eval()
@@ -80,7 +125,7 @@ class TrainerFrequencyAutoencoder(object):
     test_loss = 0.0
 
     num_examples = 0
-    for batch_idx, batch in enumerate(self.test_loader):
+    for batch, labels in self.test_loader:
       if self.cuda:
         input_data = Variable(batch).cuda()
       else:
@@ -88,13 +133,45 @@ class TrainerFrequencyAutoencoder(object):
 
       num_examples += input_data.shape[0]
 
-      output_data = self.model.forward(input_data)
+      output_data, latent = self.model.forward(input_data)
       loss = self.model.loss_criterion(input_data, output_data)
-      test_loss += float(loss)
+      test_loss += float(loss) * input_data.shape[0]
 
     self.test_loss_history.append(test_loss/num_examples)
 
     print('Test loss:{:.4f}'.format(test_loss/num_examples))
+
+    return self.test_loss_history[-1]
+
+  def eval_classifier(self):
+    self.model.eval()
+    self.model_classifier.eval()
+
+    running_loss = 0.0
+    num_examples = 0
+    num_correct = 0
+
+    for batch, labels in self.test_loader:
+
+      if self.cuda:
+        input_data = Variable(batch).cuda()
+        label_data = Variable(labels).cuda()
+      else:
+        input_data = Variable(batch)
+        label_data = Variable(labels)
+
+      output_data, latent_data = self.model.forward(input_data)
+      class_output = self.model_classifier.forward(latent_data)
+      loss = self.model_classifier.loss_criterion(class_output, label_data)
+      running_loss += loss.item() * input_data.size(0)
+      num_examples += input_data.shape[0]
+      _, preds = torch.max(class_output, 1)
+      num_correct += torch.sum(preds == label_data.data).cpu().data.numpy()
+
+    self.test_loss_history.append(running_loss/num_examples)
+
+    print('Test loss:{:.4f}, accuracy {:.4f}'.format(
+        running_loss/num_examples, num_correct/num_examples))
 
     return self.test_loss_history[-1]
 
@@ -105,12 +182,3 @@ class TrainerFrequencyAutoencoder(object):
     elif mode == 'test':
       plt.plot(self.test_loss_history)
     plt.show()
-
-
-if __name__ == '__main__':
-  trainer = TrainerFrequencyAutoencoder(
-      'data/fma_xs/', 'model_logs/', cuda=True)
-
-  trainer.train(num_epochs=100)
-
-# run in main project directory with python -m runner.train_frequency_autoencoder
