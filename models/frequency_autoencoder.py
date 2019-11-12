@@ -5,6 +5,7 @@ Input is assumed to be fixed length vector
 
 import torch
 import torch.nn as nn
+import numpy as np
 
 from collections import OrderedDict
 
@@ -22,11 +23,11 @@ class FrequencyAutoencoder(nn.Module):
 
     super(FrequencyAutoencoder, self).__init__()
 
-    self.input_size = input_size  # assume input size is 1025 x 129
+    self.input_size = input_size  # assume input size is 257 x 126
 
-    self.kernel_sizes = [(5, 4), (5, 4)]
+    self.kernel_sizes = [(5, 6), (5, 5)]
     self.strides = [(2, 2), (2, 2)]
-    self.filters = [1, 4, 8]
+    self.filters = [2, 4, 8]
 
     self.encoder_model = nn.Sequential(OrderedDict([
         ('conv1', nn.Conv2d(
@@ -59,9 +60,12 @@ class FrequencyAutoencoder(nn.Module):
 
     if self.first:
       self.first = False
-      print("Input shape", inputs.shape, "size", inputs.size)
-      print("Latent shape", encoded_data.shape, "size", encoded_data.size)
-      print("Output shape", decoded_data.shape, "size", decoded_data.size)
+      print("Input shape", inputs.shape, "size",
+            np.prod(np.array(inputs.shape)))
+      print("Latent shape", encoded_data.shape, "size",
+            np.prod(np.array(encoded_data.shape)))
+      print("Output shape", decoded_data.shape, "size",
+            np.prod(np.array(decoded_data.shape)))
 
     return decoded_data
 

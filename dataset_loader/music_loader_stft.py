@@ -48,17 +48,7 @@ class MusicLoaderSTFT(data.Dataset):
   def spec_to_audio(self, spectrogram, index=None):
     # If no index is given, then no phase information is reconstructed
 
-    unlog = spectrogram
-    #unlog = np.exp(spectrogram)
-    phase = np.zeros(spectrogram.shape)
-
-    print("spectrogram shape", spectrogram.shape)
-    if index is not None:
-      signal = self.get_raw(index)
-      ft = lc.stft(signal, n_fft=512)
-      phase = np.angle(ft)
-
-    complex_spect = unlog * np.exp(1j * phase)
+    complex_spect = spectrogram[0, :, :] + 1j * spectrogram[1, :, :]
     return lc.istft(complex_spect)
 
   def get_raw(self, index):
@@ -83,11 +73,10 @@ class MusicLoaderSTFT(data.Dataset):
     """
     signal = self.get_raw(index)
     ft = lc.stft(signal, n_fft=512)
-    ft = np.abs(ft)
-    # spectrogram = np.log(ft)  # Conver to DB
-    spectrogram = ft
-    # Add dimension to comply with Conv2D
-    spectrogram = np.expand_dims(spectrogram, axis=0)
+
+    spectrogram = np.zeros((2, ft.shape[0], ft.shape[1]), dtype="float32")
+    spectrogram[0, :, :] = np.real(ft)
+    spectrogram[1, :, :] = np.imag(ft)
 
     return spectrogram
 
