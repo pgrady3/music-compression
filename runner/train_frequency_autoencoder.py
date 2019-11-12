@@ -1,9 +1,6 @@
 import os
-
 import torch.utils
-
 from torch.autograd import Variable
-
 from models.frequency_autoencoder import FrequencyAutoencoder
 from dataset_loader.music_loader_stft import MusicLoaderSTFT
 
@@ -96,6 +93,8 @@ class TrainerFrequencyAutoencoder(object):
       test_loss += float(loss)
 
     self.test_loss_history.append(test_loss/num_examples)
+
+    print('Test loss:{:.4f}'.format(test_loss/num_examples))
 
     return self.test_loss_history[-1]
 

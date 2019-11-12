@@ -19,7 +19,7 @@ class MusicLoaderSTFT(data.Dataset):
   train_folder = 'train'
   test_folder = 'test'
 
-  def __init__(self, root_dir, split='train', snippet_size=65536, transform=None):
+  def __init__(self, root_dir, split='train', snippet_size=16000, transform=None):
     self.root = os.path.expanduser(root_dir)
     self.transform = transform
     self.split = split
@@ -48,12 +48,14 @@ class MusicLoaderSTFT(data.Dataset):
   def spec_to_audio(self, spectrogram, index=None):
     # If no index is given, then no phase information is reconstructed
 
-    unlog = np.exp(spectrogram)
+    unlog = spectrogram
+    #unlog = np.exp(spectrogram)
     phase = np.zeros(spectrogram.shape)
 
+    print("spectrogram shape", spectrogram.shape)
     if index is not None:
       signal = self.get_raw(index)
-      ft = lc.stft(signal)
+      ft = lc.stft(signal, n_fft=512)
       phase = np.angle(ft)
 
     complex_spect = unlog * np.exp(1j * phase)
@@ -65,8 +67,8 @@ class MusicLoaderSTFT(data.Dataset):
     raw_audio = torch.load(self.file_names[index])
 
     # randomly select a portion from the raw_audio
-    # start_idx = random.randint(0, raw_audio.numel()-self.snippet_size-1)
-    start_idx = 50000  # Make deterministic so we can reconstruct
+    start_idx = np.random.randint(0, raw_audio.numel()-self.snippet_size-1)
+    # start_idx = 50000  # Make deterministic so we can reconstruct
 
     snippet = raw_audio[start_idx:start_idx+self.snippet_size]
 
@@ -80,10 +82,10 @@ class MusicLoaderSTFT(data.Dataset):
         tuple: (image, target) where target is index of the target class.
     """
     signal = self.get_raw(index)
-    ft = lc.stft(signal)
+    ft = lc.stft(signal, n_fft=512)
     ft = np.abs(ft)
-    spectrogram = np.log(ft)  # Conver to DB
-
+    # spectrogram = np.log(ft)  # Conver to DB
+    spectrogram = ft
     # Add dimension to comply with Conv2D
     spectrogram = np.expand_dims(spectrogram, axis=0)
 

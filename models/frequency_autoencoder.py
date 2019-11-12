@@ -24,21 +24,28 @@ class FrequencyAutoencoder(nn.Module):
 
     self.input_size = input_size  # assume input size is 1025 x 129
 
+    self.kernel_sizes = [(5, 4), (5, 4)]
+    self.strides = [(2, 2), (2, 2)]
+    self.filters = [1, 8, 32]
+
     self.encoder_model = nn.Sequential(OrderedDict([
-        ('conv1', nn.Conv2d(1, 8, kernel_size=8, stride=1)),
+        ('conv1', nn.Conv2d(
+            self.filters[0], self.filters[1], kernel_size=self.kernel_sizes[0], stride=self.strides[0])),
         ('relu1', nn.ReLU(inplace=True)),
-        ('conv2', nn.Conv2d(8, 32, kernel_size=16, stride=1)),
+        ('conv2', nn.Conv2d(
+            self.filters[1], self.filters[2], kernel_size=self.kernel_sizes[1], stride=self.strides[1])),
         ('relu2', nn.ReLU(inplace=True)),
     ]))
 
     self.decoder_model = nn.Sequential(OrderedDict([
         ('convT2', nn.ConvTranspose2d(
-            32, 8, kernel_size=16, stride=1)),
+            self.filters[2], self.filters[1], kernel_size=self.kernel_sizes[1], stride=self.strides[1])),
         ('reluT2', nn.ReLU(inplace=True)),
-        ('convT1', nn.ConvTranspose2d(8, 1, kernel_size=8, stride=1)),
+        ('convT1', nn.ConvTranspose2d(
+            self.filters[1], self.filters[0], kernel_size=self.kernel_sizes[0], stride=self.strides[0])),
     ]))
 
-    self.loss_criterion = nn.L1Loss()
+    self.loss_criterion = nn.MSELoss()
 
   def forward(self, inputs):
     '''
