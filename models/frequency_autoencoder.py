@@ -26,7 +26,7 @@ class FrequencyAutoencoder(nn.Module):
 
     self.kernel_sizes = [(5, 4), (5, 4)]
     self.strides = [(2, 2), (2, 2)]
-    self.filters = [1, 8, 32]
+    self.filters = [1, 4, 8]
 
     self.encoder_model = nn.Sequential(OrderedDict([
         ('conv1', nn.Conv2d(
@@ -59,8 +59,9 @@ class FrequencyAutoencoder(nn.Module):
 
     if self.first:
       self.first = False
-      print("In shape", inputs.shape, "latent",
-            encoded_data.shape, "out shape", decoded_data.shape)
+      print("Input shape", inputs.shape, "size", inputs.size)
+      print("Latent shape", encoded_data.shape, "size", encoded_data.size)
+      print("Output shape", decoded_data.shape, "size", decoded_data.size)
 
     return decoded_data
 
