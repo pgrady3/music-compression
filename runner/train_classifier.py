@@ -35,9 +35,11 @@ class TrainerClassifier(object):
                                                    **dataloader_args
                                                    )
 
-    self.optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, self.model.parameters()),
-                                      lr=1e-5,
+    self.optimizer = torch.optim.Adam(self.model.parameters(),
+                                      lr=1e-3,
                                       weight_decay=1e-5)
+
+    self.lr_scheduler = torch.optim.lr_scheduler.StepLR(self.optimizer, step_size=50, gamma=0.75)
     print(self.optimizer)
     self.train_loss_history = []
     self.test_loss_history = []
@@ -72,12 +74,17 @@ class TrainerClassifier(object):
         loss.backward()
         self.optimizer.step()
 
+      self.lr_scheduler.step()
       if epoch_idx % 10 == 0:
         print('Epoch:{}, Loss:{:.4f}'.format(epoch_idx+1, float(loss)))
         self.train_loss_history.append(float(loss))
         self.eval_on_test()
         self.model.train()
         self.save_model()
+
+      # unfreeze previous layers after 100 epochs
+      if epoch_idx==200:
+        self.model.unfreeze_layers()
 
   def eval_on_test(self):
     self.model.eval()
