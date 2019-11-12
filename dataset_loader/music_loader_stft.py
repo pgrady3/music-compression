@@ -11,7 +11,7 @@ import librosa.core as lc
 from utils.io import convert_audio_to_tensors
 
 
-class MusicLoader(data.Dataset):
+class MusicLoaderSTFT(data.Dataset):
   '''
   Class for data loading
   '''
@@ -19,7 +19,7 @@ class MusicLoader(data.Dataset):
   train_folder = 'train'
   test_folder = 'test'
 
-  def __init__(self, root_dir, split='train', snippet_size=65536, transform=None):
+  def __init__(self, root_dir, split='train', snippet_size=16000, transform=None):
     self.root = os.path.expanduser(root_dir)
     self.transform = transform
     self.split = split
@@ -48,15 +48,7 @@ class MusicLoader(data.Dataset):
   def spec_to_audio(self, spectrogram, index=None):
     # If no index is given, then no phase information is reconstructed
 
-    unlog = np.exp(spectrogram)
-    phase = np.zeros(spectrogram.shape)
-
-    if index is not None:
-      signal = self.get_raw(index)
-      ft = lc.stft(signal)
-      phase = np.angle(ft)
-
-    complex_spect = unlog * np.exp(1j * phase)
+    complex_spect = spectrogram[0, :, :] + 1j * spectrogram[1, :, :]
     return lc.istft(complex_spect)
 
   def get_raw(self, index):
@@ -65,8 +57,8 @@ class MusicLoader(data.Dataset):
     raw_audio = torch.load(self.file_names[index])
 
     # randomly select a portion from the raw_audio
-    # start_idx = random.randint(0, raw_audio.numel()-self.snippet_size-1)
-    start_idx = 50000  # Make deterministic so we can reconstruct
+    start_idx = np.random.randint(0, raw_audio.numel()-self.snippet_size-1)
+    # start_idx = 50000  # Make deterministic so we can reconstruct
 
     snippet = raw_audio[start_idx:start_idx+self.snippet_size]
 
@@ -80,9 +72,12 @@ class MusicLoader(data.Dataset):
         tuple: (image, target) where target is index of the target class.
     """
     signal = self.get_raw(index)
-    ft = lc.stft(signal)
-    ft = np.abs(ft)
-    spectrogram = np.log(ft)  # Conver to DB
+    ft = lc.stft(signal, n_fft=512)
+
+    spectrogram = np.zeros((2, ft.shape[0], ft.shape[1]), dtype="float32")
+    spectrogram[0, :, :] = np.real(ft)
+    spectrogram[1, :, :] = np.imag(ft)
+
     return spectrogram
 
   def __len__(self):
