@@ -12,14 +12,19 @@ def read_mp3(file_name, normalized=False):
   '''
   Reads the mp3 file from the disk
   '''
-  a = pydub.AudioSegment.from_mp3(file_name)
-  y = np.array(a.get_array_of_samples())
-  if a.channels == 2:
-    y = preprocess_audio(y.reshape((-1, 2)))
-  if normalized:
-    return a.frame_rate, np.float32(y) / 2**15
-  else:
-    return a.frame_rate, y
+  try:
+    a = pydub.AudioSegment.from_mp3(file_name)
+    y = np.array(a.get_array_of_samples())
+    if a.channels == 2:
+      y = preprocess_audio(y.reshape((-1, 2)))
+    if normalized:
+      return a.frame_rate, np.float32(y) / 2**15
+    else:
+      return a.frame_rate, y
+  except Exception as e:
+    print("Processing failed for file:", file_name)
+    print("Exception")
+    return None, None
 
 
 def preprocess_audio(input_vec):
@@ -57,11 +62,12 @@ def convert_audio_to_tensors(file_dir):
       # print("Converting", f)
       _, audio = read_mp3(f)
 
-      output_name = os.path.join(
-          file_dir, os.path.basename(f).split('.')[0] + '.pt'
-      )
+      if audio is not None:
+        output_name = os.path.join(
+            file_dir, os.path.basename(f).split('.')[0] + '.pt'
+        )
 
-      torch.save(torch.tensor(audio, dtype=torch.float32), output_name)
+        torch.save(torch.tensor(audio, dtype=torch.float32), output_name)
     except Exception as ex:
       print(ex)
 
