@@ -1,5 +1,7 @@
 data/fma*
 .vscode/*
+*.wav
+model_logs/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
