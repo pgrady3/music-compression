@@ -23,7 +23,7 @@ def read_mp3(file_name, normalized=False):
       return a.frame_rate, y
   except Exception as e:
     print("Processing failed for file:", file_name)
-    print("Exception")
+    print(e)
     return None, None
 
 
