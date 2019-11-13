@@ -1,6 +1,6 @@
 '''
 Script with Pytorch's dataloader class
-'''
+''' 
 import os
 import glob
 import random
@@ -16,8 +16,8 @@ class MusicLoader(data.Dataset):
   Class for data loading
   '''
 
-  train_folder = 'train'
-  test_folder = 'test'
+  train_folder = 'data'
+  test_folder = 'data'
 
   def __init__(self, root_dir, split='train', snippet_size=65536, transform=None):
     self.root = os.path.expanduser(root_dir)

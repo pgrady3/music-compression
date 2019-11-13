@@ -1,6 +1,5 @@
 # functions to help read and write audio files
 
-
 import os
 import glob
 import pydub
@@ -12,7 +11,10 @@ def read_mp3(file_name, normalized=False):
   '''
   Reads the mp3 file from the disk
   '''
-  a = pydub.AudioSegment.from_mp3(file_name)
+  try:
+    a = pydub.AudioSegment.from_mp3(file_name)
+  except:
+    print("Failed converting file: ", filename)
   y = np.array(a.get_array_of_samples())
   if a.channels == 2:
     y = preprocess_audio(y.reshape((-1, 2)))
@@ -59,7 +61,9 @@ def convert_audio_to_tensors(file_dir):
         file_dir, os.path.basename(f).split('.')[0] + '.pt'
     )
 
-    torch.save(torch.tensor(audio, dtype=torch.float32), output_name)
+    tt = torch.tensor(audio, dtype=torch.float32)
+
+    torch.save(tt, output_name)
 
 
 if __name__ == '__main__':
@@ -67,4 +71,4 @@ if __name__ == '__main__':
 
   # print(np.nonzero(audio))
 
-  convert_audio_to_tensors('data/sample/061/train/')
+  convert_audio_to_tensors('data/sample_data/')
