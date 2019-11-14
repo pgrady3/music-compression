@@ -112,4 +112,4 @@ venv.bak/
 data/
 
 # ignoring cached model 
-model_checkpoints/
+# model_checkpoints/
