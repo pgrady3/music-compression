@@ -2,7 +2,7 @@ import os
 import torch
 import torch.utils
 from torch.autograd import Variable
-from models.frequency_autoencoder import FrequencyAutoencoder, Classifier
+from models.frequency_autoencoder import FrequencyAutoencoder, LSTMClassifier
 from dataset_loader.music_loader_stft import MusicLoaderSTFT
 
 import matplotlib.pyplot as plt
@@ -13,37 +13,37 @@ class TrainerFrequencyAutoencoder(object):
   This class makes training the model easier
   '''
 
-  def __init__(self, data_dir, model_dir, batch_size=16, load_from_disk=False, cuda=False):
-    self.model_dir = model_dir
+  def __init__(self, args):
+    self.model_dir = args.model_dir
 
-    self.model = FrequencyAutoencoder()
-    self.model_classifier = Classifier()
+    self.model = FrequencyAutoencoder(args.latent_ch)
+    self.model_classifier = LSTMClassifier(args.num_classes)
 
-    self.cuda = cuda
-    if cuda:
+    self.cuda = args.cuda
+    if self.cuda:
       self.model.cuda()
       self.model_classifier.cuda()
 
-    dataloader_args = {'num_workers': 4, 'pin_memory': True} if cuda else {}
+    dataloader_args = {'num_workers': args.num_workers, 'pin_memory': True,
+                       'batch_size': args.batch_size, 'shuffle': True}
 
-    self.train_dataset = MusicLoaderSTFT(data_dir, split='train')
-    self.train_loader = torch.utils.data.DataLoader(self.train_dataset, batch_size=batch_size, shuffle=True,
-                                                    **dataloader_args)
+    self.train_dataset = MusicLoaderSTFT(args.data_dir, split='train')
+    self.train_loader = torch.utils.data.DataLoader(
+        self.train_dataset, **dataloader_args)
 
-    self.test_dataset = MusicLoaderSTFT(data_dir, split='test')
-    self.test_loader = torch.utils.data.DataLoader(self.test_dataset, batch_size=batch_size, shuffle=True,
-                                                   **dataloader_args
-                                                   )
+    self.test_dataset = MusicLoaderSTFT(args.data_dir, split='test')
+    self.test_loader = torch.utils.data.DataLoader(
+        self.test_dataset, **dataloader_args)
 
     self.optimizer = torch.optim.Adam(self.model.parameters(),
-                                      lr=1e-4,
-                                      weight_decay=1e-5)
+                                      lr=args.learning_rate,
+                                      weight_decay=args.weight_decay)
 
     self.train_loss_history = []
     self.test_loss_history = []
 
     # load the model from the disk if it exists
-    if os.path.exists(model_dir) and load_from_disk:
+    if os.path.exists(args.model_dir) and args.load_encoder:
       checkpoint = torch.load(os.path.join(self.model_dir, 'checkpoint.pt'))
       self.model.load_state_dict(checkpoint['model_state_dict'])
       self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
@@ -83,6 +83,30 @@ class TrainerFrequencyAutoencoder(object):
       self.model.train()
       self.save_model()
 
+  def eval_on_test(self):
+    self.model.eval()
+
+    test_loss = 0.0
+
+    num_examples = 0
+    for batch, labels in self.test_loader:
+      if self.cuda:
+        input_data = Variable(batch).cuda()
+      else:
+        input_data = Variable(batch)
+
+      num_examples += input_data.shape[0]
+
+      output_data, latent = self.model.forward(input_data)
+      loss = self.model.loss_criterion(input_data, output_data)
+      test_loss += float(loss) * input_data.shape[0]
+
+    self.test_loss_history.append(test_loss/num_examples)
+
+    print('Test loss:{:.4f}'.format(test_loss/num_examples))
+
+    return self.test_loss_history[-1]
+
   def train_classifier(self, num_epochs):
     self.model.eval()
     for params in self.model.parameters():
@@ -118,30 +142,6 @@ class TrainerFrequencyAutoencoder(object):
       self.train_loss_history.append(float(loss))
       self.eval_classifier()
       self.model_classifier.train()
-
-  def eval_on_test(self):
-    self.model.eval()
-
-    test_loss = 0.0
-
-    num_examples = 0
-    for batch, labels in self.test_loader:
-      if self.cuda:
-        input_data = Variable(batch).cuda()
-      else:
-        input_data = Variable(batch)
-
-      num_examples += input_data.shape[0]
-
-      output_data, latent = self.model.forward(input_data)
-      loss = self.model.loss_criterion(input_data, output_data)
-      test_loss += float(loss) * input_data.shape[0]
-
-    self.test_loss_history.append(test_loss/num_examples)
-
-    print('Test loss:{:.4f}'.format(test_loss/num_examples))
-
-    return self.test_loss_history[-1]
 
   def eval_classifier(self):
     self.model.eval()
