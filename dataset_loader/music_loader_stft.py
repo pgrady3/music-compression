@@ -8,6 +8,7 @@ import torch.utils.data as data
 import matplotlib.pyplot as plt
 import numpy as np
 import librosa.core as lc
+import librosa
 import csv
 from utils.io import convert_audio_to_tensors
 
@@ -20,10 +21,19 @@ class MusicLoaderSTFT(data.Dataset):
   train_folder = 'train'
   test_folder = 'test'
 
-  def __init__(self, root_dir, split='train', snippet_size=16000, transform=None):
+  def __init__(self, root_dir, snippet_size=512*128, split='train', transform=None, mel=False):
     self.root = os.path.expanduser(root_dir)
     self.transform = transform
     self.split = split
+    self.mel = mel
+
+    self.sampling_rate = 8000  # Sorry, I'll fix this later
+    self.n_fft = 512
+    self.n_mels = 512
+
+    self.mel_bank = librosa.filters.mel(
+        self.sampling_rate, n_fft=self.n_fft, n_mels=self.n_mels, norm=None)
+    self.inv_mel_bank = np.linalg.pinv(self.mel_bank)
 
     self.snippet_size = snippet_size
 
@@ -49,10 +59,15 @@ class MusicLoaderSTFT(data.Dataset):
       for row in data:
         self.labels[int(row[0])] = int(row[1])
 
-  def spec_to_audio(self, spectrogram, index=None):
-    # If no index is given, then no phase information is reconstructed
+  def spec_to_audio(self, spectrogram):
+    if(self.mel):
+      real = self.inv_mel_bank.dot(spectrogram[0, :, :])
+      imag = self.inv_mel_bank.dot(spectrogram[1, :, :])
+    else:
+      real = spectrogram[0, :, :]
+      imag = spectrogram[1, :, :]
 
-    complex_spect = spectrogram[0, :, :] + 1j * spectrogram[1, :, :]
+    complex_spect = real + 1j * imag
     return lc.istft(complex_spect)
 
   def get_raw(self, index):
@@ -74,11 +89,20 @@ class MusicLoaderSTFT(data.Dataset):
         tuple: (image, target) where target is index of the target class.
     """
     signal = self.get_raw(index)
-    ft = lc.stft(signal, n_fft=512)
+    ft = lc.stft(signal, n_fft=self.n_fft)
 
     spectrogram = np.zeros((2, ft.shape[0], ft.shape[1]), dtype="float32")
     spectrogram[0, :, :] = np.real(ft)
     spectrogram[1, :, :] = np.imag(ft)
+
+    if(self.mel):
+      real = self.mel_bank.dot(spectrogram[0, :, :])
+      imag = self.mel_bank.dot(spectrogram[1, :, :])
+
+      spectrogram = np.zeros(
+          (2, real.shape[0], real.shape[1]), dtype="float32")
+      spectrogram[0, :, :] = real
+      spectrogram[1, :, :] = imag
 
     file_num = self.file_names[index].split('/')[-1]
     file_num = file_num.split('.')[0]
