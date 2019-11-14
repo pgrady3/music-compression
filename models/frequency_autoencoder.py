@@ -16,7 +16,7 @@ class FrequencyAutoencoder(nn.Module):
   Parent class for model definition
   '''
 
-  def __init__(self, latent_ch):
+  def __init__(self, latent_ch=8):
     '''
     Initialize the model
     '''
@@ -24,9 +24,14 @@ class FrequencyAutoencoder(nn.Module):
     self.first = True
 
     # assume input size is 257 x 126
-    self.kernel_sizes = [(5, 6), (5, 5)]
+    self.kernel_sizes = [(5, 5), (5, 5)]
     self.strides = [(2, 2), (2, 2)]
     self.filters = [2, 4, latent_ch]
+
+    # assume input size is 512 x 513
+    # self.kernel_sizes = [(8, 5), (5, 5)]
+    # self.strides = [(2, 2), (2, 2)]
+    # self.filters = [2, 4, latent_ch]
 
     self.encoder_model = nn.Sequential(OrderedDict([
         ('conv1', nn.Conv2d(
@@ -83,27 +88,34 @@ class LSTMClassifier(nn.Module):
   def __init__(self, num_classes):
     super(LSTMClassifier, self).__init__()
 
-    self.rnn_1 = nn.LSTM(input_size=63, hidden_size=128, num_layers=2,
+    self.rnn_1 = nn.LSTM(input_size=496, hidden_size=128, num_layers=1,
                          batch_first=True, dropout=0.4)
 
-    self.mlp = nn.Sequential(nn.Linear(128, 64), nn.BatchNorm1d(64), nn.ReLU(inplace=True),
-                             nn.Dropout(p=0.4), nn.Linear(64, num_classes))
+    # self.mlp = nn.Sequential(nn.Linear(128, 64), nn.BatchNorm1d(64), nn.ReLU(inplace=True),
+    #                         nn.Dropout(p=0.4), nn.Linear(64, num_classes))
+
+    self.mlp = nn.Sequential(nn.Linear(128, num_classes))
 
     self.first = True
+    self.loss_criterion = nn.CrossEntropyLoss()
 
   def forward(self, inputs):
     '''
     Forward pass implementation
-    inputs: The music input data. Dimension: Batch*N*D
+    inputs: The music input data. Dimension: Batch*Latent Channels*Latent Freq*Latent Time
     '''
+
+    # Swap the latent time ch to be after batch
+    reshaped = inputs.permute(0, 3, 1, 2).contiguous()
+    # Merge latent channels and latent frequency
+    reshaped = reshaped.view(reshaped.shape[0], reshaped.shape[1], -1)
 
     if self.first:
       self.first = False
       print("LSTM input shape", inputs.shape)
+      print("LSTM reshaped shape", reshaped.shape)
 
-    reshaped = inputs
-
-    r_out = self.rnn_1(reshaped)
+    r_out, _ = self.rnn_1(reshaped)
     rnn = r_out[:, -1, :]  # Extract hidden vector from last timestep
 
     out = self.mlp(rnn)
@@ -111,23 +123,23 @@ class LSTMClassifier(nn.Module):
     return out
 
 
-# class Classifier(nn.Module):
-#   def __init__(self):
-#     super(Classifier, self).__init__()
+class Classifier(nn.Module):
+  def __init__(self):
+    super(Classifier, self).__init__()
 
-#     fc_size = [8 * 62 * 29, 100, 8]  # Forgive me for I have sinned
+    fc_size = [8 * 62 * 29, 100, 8]  # Forgive me for I have sinned
 
-#     self.fc_1 = nn.Linear(fc_size[0], fc_size[1])
-#     self.fc_2 = nn.Linear(fc_size[1], fc_size[2])
+    self.fc_1 = nn.Linear(fc_size[0], fc_size[1])
+    self.fc_2 = nn.Linear(fc_size[1], fc_size[2])
 
-#     self.bn_1 = nn.BatchNorm1d(fc_size[1])
-#     self.bn_2 = nn.BatchNorm1d(fc_size[2])
+    self.bn_1 = nn.BatchNorm1d(fc_size[1])
+    self.bn_2 = nn.BatchNorm1d(fc_size[2])
 
-#     self.loss_criterion = nn.CrossEntropyLoss()
+    self.loss_criterion = nn.CrossEntropyLoss()
 
-#   def forward(self, inputs):
-#     flattened = inputs.view(inputs.shape[0], -1)
-#     fc_1 = F.relu(self.bn_1(self.fc_1(flattened)))
-#     fc_2 = F.relu(self.bn_2(self.fc_2(fc_1)))
+  def forward(self, inputs):
+    flattened = inputs.view(inputs.shape[0], -1)
+    fc_1 = F.relu(self.bn_1(self.fc_1(flattened)))
+    fc_2 = F.relu(self.bn_2(self.fc_2(fc_1)))
 
-#     return fc_2
+    return fc_2
