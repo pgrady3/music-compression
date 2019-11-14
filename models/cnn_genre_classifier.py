@@ -33,7 +33,7 @@ class CNNGenreClassifier(nn.Module):
     ]))
 
     self.cnn_layers = nn.Sequential(OrderedDict([
-        ('ln3', nn.LayerNorm((32,255))),
+        ('ln3', nn.LayerNorm((32,511))),
         ('conv4', nn.Conv1d(32, 32, kernel_size=5, stride=1)),
         ('relu4', nn.ReLU(inplace=True)),
         ('maxpool5', nn.MaxPool1d(kernel_size=5, stride=5)),
@@ -43,7 +43,7 @@ class CNNGenreClassifier(nn.Module):
     ]))
 
     self.fc_layers = nn.Sequential(OrderedDict([
-        ('fc1', nn.Linear(288, 100)),
+        ('fc1', nn.Linear(608, 100)),
         ('relu1', nn.ReLU(inplace=True)),
         ('fc2', nn.Linear(100, 8)),
     ]))

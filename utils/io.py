@@ -17,6 +17,10 @@ def read_mp3(file_name, normalized=False):
     y = np.array(a.get_array_of_samples())
     if a.channels == 2:
       y = preprocess_audio(y.reshape((-1, 2)))
+
+    if y.shape[0] < 65536*5:
+      raise Exception("Insufficient size of mp3 file ")
+
     if normalized:
       return a.frame_rate, np.float32(y) / 2**15
     else:

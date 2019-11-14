@@ -63,7 +63,7 @@ class CNNAutoEncoder(nn.Module):
     '''
     Computes the loss between input and output data
     '''
-    if self.loss_mode == 1:
+    if self.loss_mode == 7:
       if normalize:
         return (self.loss_criterion_mse(output_data, input_data) + 1e-2*(
             self.loss_criterion_mse(
@@ -74,6 +74,11 @@ class CNNAutoEncoder(nn.Module):
           self.loss_criterion_mse(
               output_data[:, :, :-1], output_data[:, :, 1:])
       ))/input_data.shape[2]
+    elif self.loss_mode == 1:
+      if normalize:
+        return self.loss_criterion_mse(output_data, input_data)/(input_data.shape[0]*input_data.shape[2])
+
+      return self.loss_criterion_mse(output_data, input_data)
     elif self.loss_mode == 2:
       if normalize:
         return self.loss_criterion_l1(output_data, input_data)/(input_data.shape[0]*input_data.shape[2])

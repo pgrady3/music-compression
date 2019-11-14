@@ -24,13 +24,13 @@ class TrainerClassifier(object):
     if cuda:
       self.model.cuda()
 
-    dataloader_args = {'num_workers': 2, 'pin_memory': True} if cuda else {}
+    dataloader_args = {'num_workers': 1, 'pin_memory': True} if cuda else {}
 
-    self.train_dataset = MusicGenreLoader(data_dir, split='train')
+    self.train_dataset = MusicGenreLoader(data_dir, split='train', snippet_size=65536*2)
     self.train_loader = torch.utils.data.DataLoader(self.train_dataset, batch_size=batch_size, shuffle=True,
                                                     **dataloader_args)
 
-    self.test_dataset = MusicGenreLoader(data_dir, split='test')
+    self.test_dataset = MusicGenreLoader(data_dir, split='test', snippet_size=65536*2)
     self.test_loader = torch.utils.data.DataLoader(self.test_dataset, batch_size=batch_size, shuffle=True,
                                                    **dataloader_args
                                                    )
@@ -39,7 +39,7 @@ class TrainerClassifier(object):
                                       lr=1e-3,
                                       weight_decay=1e-5)
 
-    self.lr_scheduler = torch.optim.lr_scheduler.StepLR(self.optimizer, step_size=50, gamma=0.75)
+    self.lr_scheduler = torch.optim.lr_scheduler.StepLR(self.optimizer, step_size=5, gamma=0.75)
     print(self.optimizer)
     self.train_loss_history = []
     self.test_loss_history = []
@@ -75,7 +75,7 @@ class TrainerClassifier(object):
         self.optimizer.step()
 
       self.lr_scheduler.step()
-      if epoch_idx % 10 == 0:
+      if epoch_idx % 1 == 0:
         print('Epoch:{}, Loss:{:.4f}'.format(epoch_idx+1, float(loss)))
         self.train_loss_history.append(float(loss))
         self.eval_on_test()
@@ -83,7 +83,7 @@ class TrainerClassifier(object):
         self.save_model()
 
       # unfreeze previous layers after 100 epochs
-      if epoch_idx==200:
+      if epoch_idx==20:
         self.model.unfreeze_layers()
 
   def eval_on_test(self):
