@@ -6,8 +6,11 @@ from torch.autograd import Variable
 
 from models.cnn_genre_classifier import CNNGenreClassifier
 from dataset_loader.music_genre_loader import MusicGenreLoader
+from dataset_loader.music_genre_loader_with_voting import MusicGenreLoaderWithVoting
 
 import matplotlib.pyplot as plt
+
+from scipy.stats import mode
 
 
 class TrainerClassifier(object):
@@ -15,9 +18,9 @@ class TrainerClassifier(object):
   This class makes training the model easier
   '''
 
-  def __init__(self, data_dir, model_dir, batch_size=100, load_from_disk=True, cuda=False):
+  def __init__(self, data_dir, model_dir, batch_size=100, load_from_disk=True, cuda=False, num_votes=None):
     self.model_dir = model_dir
-
+    self.num_votes = num_votes
     self.model = CNNGenreClassifier(init_from_autoencoder_flag=True)
 
     self.cuda = cuda
@@ -31,9 +34,16 @@ class TrainerClassifier(object):
                                                     **dataloader_args)
 
     self.test_dataset = MusicGenreLoader(data_dir, split='test', snippet_size=65536*2)
+    
     self.test_loader = torch.utils.data.DataLoader(self.test_dataset, batch_size=batch_size, shuffle=True,
                                                    **dataloader_args
                                                    )
+
+    if self.num_votes is not None:
+      self.test_dataset_voting = MusicGenreLoaderWithVoting(data_dir, split='test', snippet_size=65536*2, num_votes=self.num_votes)
+      self.test_loader_voting = torch.utils.data.DataLoader(self.test_dataset_voting, batch_size=batch_size, shuffle=True,
+                                                     **dataloader_args
+                                                     )
 
     self.optimizer = torch.optim.Adam(self.model.parameters(),
                                       lr=1e-3,
@@ -131,7 +141,7 @@ class TrainerClassifier(object):
 
     return float(num_correct)/float(num_examples)
 
-  def get_accuracy_voting(self, num_examples):
+  def get_accuracy_voting(self):
     '''
     Get the accuracy on the test dataset
     '''
@@ -139,17 +149,21 @@ class TrainerClassifier(object):
 
     num_examples = 0
     num_correct = 0
-    for batch_idx, batch in enumerate(self.test_loader):
+    for batch_idx, batch in enumerate(self.test_loader_voting):
       if self.cuda:
-        input_data, target_data = Variable(
-            batch[0]).cuda(), Variable(batch[1]).cuda()
+        input_data, target_data = Variable(batch[0]).cuda(), Variable(batch[1]).cuda()
       else:
         input_data, target_data = Variable(batch[0]), Variable(batch[1])
 
-      num_examples += input_data.shape[0]
+      input_data = input_data.reshape(input_data.shape[0] * self.num_votes, 1, 
+        int(input_data.shape[-1]/self.num_votes))
+      num_examples += int(input_data.shape[0]/self.num_votes)
       output_data = self.model.forward(input_data)
       predicted_labels = torch.argmax(output_data, dim=1)
-      num_correct += torch.sum(predicted_labels == target_data).cpu().item()
+      predicted_labels = predicted_labels.reshape(-1, self.num_votes)
+      predicted_labels = torch.tensor(mode(predicted_labels.cpu(), axis=1)[0])
+
+      num_correct += torch.sum(predicted_labels == target_data.cpu()).cpu().item()
 
     return float(num_correct)/float(num_examples)
 

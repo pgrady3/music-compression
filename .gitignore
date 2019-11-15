@@ -4,6 +4,7 @@ data/fma*
 model_logs/
 *.sublime-project
 *.sublime-workspace
+music*.zip
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

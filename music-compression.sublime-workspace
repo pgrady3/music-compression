@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"input",
+				"input_data\tstatement"
+			],
+			[
 				"conver",
 				"convert_audio_to_tensors"
 			],
@@ -136,15 +140,17 @@
 			"file": "runner/train_classifier.py",
 			"settings":
 			{
-				"buffer_size": 4715,
+				"buffer_size": 6295,
+				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "dataset_loader/music_genre_loader.py",
+			"file": "dataset_loader/music_genre_loader_with_voting.py",
 			"settings":
 			{
-				"buffer_size": 2107,
+				"buffer_size": 2272,
+				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		}
@@ -162,6 +168,10 @@
 		[
 			[
 				"Package Control: ",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: remove",
 				"Package Control: Remove Package"
 			],
 			[
@@ -209,9 +219,12 @@
 	],
 	"file_history":
 	[
+		"/home/jayantabhowmick/workspace/music-compression/.gitignore",
+		"/home/jayantabhowmick/workspace/music-compression/dataset_loader/music_genre_loader.py",
+		"/home/jayantabhowmick/.config/sublime-text-3/Packages/Anaconda/Anaconda.sublime-settings",
+		"/home/jayantabhowmick/.config/sublime-text-3/Packages/Anaconda/README.md",
 		"/home/jayantabhowmick/.config/sublime-text-3/Packages/SublimePythonIDE/SublimePython.sublime-settings",
 		"/home/jayantabhowmick/workspace/music-compression/music-compression.sublime-project",
-		"/home/jayantabhowmick/workspace/music-compression/.gitignore",
 		"/home/jayantabhowmick/workspace/music-compression/runner/train_classifier.py",
 		"/home/jayantabhowmick/workspace/music-compression/models/cnn_genre_classifier.py",
 		"/home/jayantabhowmick/workspace/music-compression/utils/io.py",
@@ -333,10 +346,7 @@
 		"/home/jayantabhowmick/Downloads/veri_example.yml",
 		"/tmp/mozilla_jayantabhowmick0/veri_base.yml",
 		"/home/jayantabhowmick/workspace/Weak-Supervision-Cascade/detectors/yolo_detector_utils/yolo_model.py",
-		"/home/jayantabhowmick/workspace/courses/computer_vision/assignments/ps3/warpImage.py",
-		"/home/jayantabhowmick/workspace/Weak-Supervision-Cascade/detectors/yolo.py",
-		"/home/jayantabhowmick/workspace/courses/computer_vision/assignments/ps3/getCorrespondences.py",
-		"/home/jayantabhowmick/workspace/courses/computer_vision/assignments/ps3/computeH.py"
+		"/home/jayantabhowmick/workspace/courses/computer_vision/assignments/ps3/warpImage.py"
 	],
 	"find":
 	{
@@ -373,7 +383,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -389,8 +399,8 @@
 						"selection":
 						[
 							[
-								187,
-								187
+								328,
+								328
 							]
 						],
 						"settings":
@@ -406,10 +416,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 3.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
@@ -418,61 +428,83 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4715,
+						"buffer_size": 6295,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								223,
-								223
+								5909,
+								5909
 							]
 						],
 						"settings":
 						{
+							"SL.14.region_keys":
+							[
+							],
 							"SL.48.region_keys":
 							[
+							],
+							"auto_complete_triggers":
+							[
+								{
+									"characters": "<",
+									"selector": "text.html"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - comment - constant.numeric"
+								}
 							],
 							"syntax": "Packages/Python/Python.sublime-syntax",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 3390.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"file": "dataset_loader/music_genre_loader.py",
+					"file": "dataset_loader/music_genre_loader_with_voting.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2107,
+						"buffer_size": 2272,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1691,
-								1691
+								2124,
+								2124
 							]
 						],
 						"settings":
 						{
-							"SL.49.region_keys":
+							"auto_complete_triggers":
 							[
+								{
+									"characters": "<",
+									"selector": "text.html"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - comment - constant.numeric"
+								}
 							],
 							"syntax": "Packages/Python/Python.sublime-syntax",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1311.0,
+						"translation.y": 1455.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 2,

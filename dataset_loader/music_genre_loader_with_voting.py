@@ -12,7 +12,7 @@ import torch.utils.data as data
 from utils.io import convert_audio_to_tensors
 
 
-class MusicGenreLoader(data.Dataset):
+class MusicGenreLoaderWithVoting(data.Dataset):
   '''
   Class for data loading
   '''
@@ -64,14 +64,18 @@ class MusicGenreLoader(data.Dataset):
         tuple: (image, target) where target is index of the target class.
     """
     raw_audio = torch.load(self.file_names[index])
-    print(type(raw_audio))
+
     # randomly select a portion from the raw_audio
-    # for i in range(self.num_votes):  
-    start_idx = int((random.randint(0, raw_audio.numel()-self.snippet_size-1)/100.0)*100)
-      
+    tt = []
+    for i in range(self.num_votes):  
+      start_idx = int((random.randint(0, raw_audio.numel()-self.snippet_size-1)/100.0)*100)
+      tt.append(((raw_audio[start_idx:start_idx+self.snippet_size] - 
+          self.mean_val)/self.std_val).reshape(1, -1))
+
+    audio = torch.cat(tt, axis=-1)
+
     return (
-        ((raw_audio[start_idx:start_idx+self.snippet_size] - 
-          self.mean_val)/self.std_val).reshape(1, -1),
+        audio,
         self.label_map[index]
     )
 
