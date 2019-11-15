@@ -1,0 +1,570 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"conver",
+				"convert_audio_to_tensors"
+			],
+			[
+				"node",
+				"node_weights"
+			],
+			[
+				"dam",
+				"damping_factor"
+			],
+			[
+				"get",
+				"getFramesHistogram"
+			],
+			[
+				"queri",
+				"queries_frames_scalar_product"
+			],
+			[
+				"model",
+				"modeldir"
+			],
+			[
+				"queries",
+				"queries_distances"
+			],
+			[
+				"que",
+				"queries_hists"
+			],
+			[
+				"frames",
+				"frames_hists"
+			],
+			[
+				"getF",
+				"getFileNames"
+			],
+			[
+				"c",
+				"cluster1_samples"
+			],
+			[
+				"desc",
+				"descriptor_id"
+			],
+			[
+				"cluster_",
+				"cluster1_samples"
+			],
+			[
+				"cluster",
+				"cluster1_samples"
+			],
+			[
+				"clus",
+				"cluster2_samples"
+			],
+			[
+				"cluster1",
+				"cluster1_samples"
+			],
+			[
+				"dis",
+				"displaySIFTPatches"
+			],
+			[
+				"numFea",
+				"numFeats1"
+			],
+			[
+				"aver",
+				"average_flow_history"
+			],
+			[
+				"av",
+				"average_flow_history"
+			],
+			[
+				"out",
+				"outDegree"
+			],
+			[
+				"max",
+				"maxWeight"
+			],
+			[
+				"val",
+				"values"
+			],
+			[
+				"if",
+				"ifmain\tif __name__ == '__main__'"
+			],
+			[
+				"in",
+				"inputIm"
+			],
+			[
+				"as",
+				"astype"
+			],
+			[
+				"new",
+				"new_points"
+			],
+			[
+				"pro",
+				"proj_points_np"
+			],
+			[
+				"page",
+				"page-break-after\tproperty"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "models/cnn_genre_classifier.py",
+			"settings":
+			{
+				"buffer_size": 3222,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "runner/train_classifier.py",
+			"settings":
+			{
+				"buffer_size": 4715,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "dataset_loader/music_genre_loader.py",
+			"settings":
+			{
+				"buffer_size": 2107,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"Package Control: ",
+				"Package Control: Remove Package"
+			],
+			[
+				"rein",
+				"Indentation: Reindent Lines"
+			],
+			[
+				"json",
+				"JsonTree: Show Tree"
+			],
+			[
+				"Package Control: ins",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 150.0,
+		"history":
+		[
+			"Package Control",
+			"import urllib.request,os,hashlib; h = '6f4c264a24d933ce70df5dedcf1dcaee' + 'ebe013ee18cced0ef93d5f746d80ef60'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by) ",
+			" import urllib.request,os,hashlib; h = '6f4c264a24d933ce70df5dedcf1dcaee' + 'ebe013ee18cced0ef93d5f746d80ef60'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by) "
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/jayantabhowmick/workspace/music-compression",
+		"/home/jayantabhowmick/workspace/music-compression/.ipynb_checkpoints",
+		"/home/jayantabhowmick/workspace/music-compression/dataset_loader",
+		"/home/jayantabhowmick/workspace/music-compression/models",
+		"/home/jayantabhowmick/workspace/music-compression/runner",
+		"/home/jayantabhowmick/workspace/music-compression/utils"
+	],
+	"file_history":
+	[
+		"/home/jayantabhowmick/.config/sublime-text-3/Packages/SublimePythonIDE/SublimePython.sublime-settings",
+		"/home/jayantabhowmick/workspace/music-compression/music-compression.sublime-project",
+		"/home/jayantabhowmick/workspace/music-compression/.gitignore",
+		"/home/jayantabhowmick/workspace/music-compression/runner/train_classifier.py",
+		"/home/jayantabhowmick/workspace/music-compression/models/cnn_genre_classifier.py",
+		"/home/jayantabhowmick/workspace/music-compression/utils/io.py",
+		"/home/jayantabhowmick/workspace/music-compression/dataset_loader/music_loader.py",
+		"/home/jayantabhowmick/workspace/music-compression/runner/train.py",
+		"/home/jayantabhowmick/workspace/music-compression/models/cnn_autoencoder.py",
+		"/home/jayantabhowmick/workspace/music-compression/runner/compression_test.py",
+		"/home/jayantabhowmick/Downloads/output.jsonl",
+		"/home/jayantabhowmick/Downloads/test.txt",
+		"/home/jayantabhowmick/workspace/installed.txt",
+		"/home/jayantabhowmick/Downloads/STS-B/STS-B/test.tsv",
+		"/home/jayantabhowmick/Downloads/STS-B/STS-B/train.tsv",
+		"/home/jayantabhowmick/workspace/youtube_comments/run_glue.py",
+		"/home/jayantabhowmick/workspace/music-compression/utils/data_helper.py",
+		"/home/jayantabhowmick/workspace/music-compression/implementation_notes.md",
+		"/home/jayantabhowmick/Downloads/output.txt",
+		"/home/jayantabhowmick/workspace/music-compression/README.md",
+		"/home/jayantabhowmick/workspace/youtube_comments/downloader.py",
+		"/home/jayantabhowmick/workspace/youtube_comments/data/yt_video_list.csv",
+		"/home/jayantabhowmick/workspace/youtube_comments/reader.sh",
+		"/home/jayantabhowmick/workspace/youtube_comments/data/ItKE7H5WgDw.txt",
+		"/home/jayantabhowmick/workspace/image2video/reader.sh",
+		"/home/jayantabhowmick/workspace/youtube_comments/WTnFIJs53Pc",
+		"/home/jayantabhowmick/workspace/courses/computer_vision/assignments/ps4/PS4CodePython/Bhowmick_Jayanta_PS4_py/fullFrameQueries.py",
+		"/home/jayantabhowmick/workspace/courses/computer_vision/assignments/ps4/PS4CodePython/ProvidedCodePython/loadDataExample.py",
+		"/home/jayantabhowmick/workspace/courses/computer_vision/assignments/ps4/PS4CodePython/Bhowmick_Jayanta_PS4_py/visualizeVocabulary.py",
+		"/home/jayantabhowmick/workspace/courses/computer_vision/assignments/ps4/PS4CodePython/Bhowmick_Jayanta_PS4_py/regionQueries.py",
+		"/home/jayantabhowmick/workspace/courses/computer_vision/assignments/ps4/PS4CodePython/ProvidedCodePython/fullFrameQueries.py",
+		"/home/jayantabhowmick/workspace/courses/computer_vision/assignments/ps4/PS4CodePython/ProvidedCodePython/regionQueries.py",
+		"/home/jayantabhowmick/workspace/courses/computer_vision/assignments/ps4/PS4CodePython/ProvidedCodePython/visualizeVocabulary.py",
+		"/home/jayantabhowmick/workspace/courses/computer_vision/assignments/ps4/PS4CodePython/ProvidedCodePython/rawDescriptorMatches.py",
+		"/home/jayantabhowmick/workspace/courses/computer_vision/assignments/ps4/PS4CodePython/ProvidedCodePython/selectRegion.py",
+		"/home/jayantabhowmick/workspace/courses/computer_vision/assignments/ps4/PS4CodePython/ProvidedCodePython/loadDataExample.ipynb",
+		"/home/jayantabhowmick/workspace/courses/computer_vision/assignments/ps4/Solutions.txt",
+		"/home/jayantabhowmick/workspace/courses/data_and_visual_analytics/assignments/hw4/hw4-skeleton/hw4-skeleton/Q2/random_forest.py",
+		"/home/jayantabhowmick/workspace/courses/data_and_visual_analytics/assignments/hw4/hw4-skeleton/hw4-skeleton/Q2/util.py",
+		"/home/jayantabhowmick/workspace/courses/data_and_visual_analytics/assignments/hw4/hw4-skeleton/hw4-skeleton/Q2/decision_tree.py",
+		"/home/jayantabhowmick/workspace/courses/data_and_visual_analytics/assignments/hw4/hw4-skeleton/hw4-skeleton/Q1/pagerank.py",
+		"/home/jayantabhowmick/workspace/courses/data_and_visual_analytics/assignments/hw4/hw4-skeleton/hw4-skeleton/Q1/simplified_pagerank25.txt",
+		"/home/jayantabhowmick/workspace/courses/data_and_visual_analytics/assignments/hw4/hw4-skeleton-bkp/hw4-skeleton/hw4-skeleton/Q1/simplified_pagerank5.txt",
+		"/home/jayantabhowmick/workspace/courses/data_and_visual_analytics/assignments/hw4/hw4-skeleton/hw4-skeleton/Q1/simplified_pagerank10.txt",
+		"/home/jayantabhowmick/workspace/courses/data_and_visual_analytics/assignments/hw4/hw4-skeleton/hw4-skeleton/Q1/simplified_pagerank5.txt",
+		"/home/jayantabhowmick/workspace/courses/computer_vision/assignments/ps4/PS4CodePython/ProvidedCodePython/getPatchFromSIFTParameters.py",
+		"/home/jayantabhowmick/workspace/courses/computer_vision/assignments/ps4/PS4CodePython/ProvidedCodePython/displaySIFTPatches.py",
+		"/home/jayantabhowmick/workspace/courses/computer_vision/assignments/ps4/PS4CodePython/ProvidedCodePython/dist2.py",
+		"/home/jayantabhowmick/workspace/Weak-Supervision-Cascade/config/config.yml",
+		"/home/jayantabhowmick/workspace/music-compression/models/__init__.py",
+		"/home/jayantabhowmick/.config/sublime-text-3/Packages/User/Preferences.sublime-settings",
+		"/home/jayantabhowmick/.config/sublime-text-3/Packages/Default/Preferences.sublime-settings",
+		"/home/jayantabhowmick/workspace/music-compression/data/fma_metadata/README.txt",
+		"/home/jayantabhowmick/workspace/music-compression/data/fma_metadata/raw_tracks.csv",
+		"/home/jayantabhowmick/workspace/music-compression/data/fma_metadata/genres.csv",
+		"/home/jayantabhowmick/workspace/music-compression/data/fma_metadata/tracks.csv",
+		"/home/jayantabhowmick/workspace/music-compression/data/fma_metadata/raw_genres.csv",
+		"/home/jayantabhowmick/workspace/opencv/samples/python/mosse.py",
+		"/home/jayantabhowmick/workspace/opencv/modules/imgproc/src/drawing.cpp",
+		"/home/jayantabhowmick/workspace/Veri_Vric_Testing.txt",
+		"/home/jayantabhowmick/workspace/Contextual-Invariants-for-ReID/config/veri_vric.yml",
+		"/home/jayantabhowmick/workspace/Contextual-Invariants-for-ReID/config/veri_vric_testing.yml",
+		"/home/jayantabhowmick/workspace/Contextual-Invariants-for-ReID/config/vric_veri.yml",
+		"/home/jayantabhowmick/workspace/Vric_Vric_Testing.txt",
+		"/tmp/mozilla_jayantabhowmick0/vric_veri-1.yml",
+		"/home/jayantabhowmick/workspace/Contextual-Invariants-for-ReID/config/veri_vric_2.yml",
+		"/home/jayantabhowmick/workspace/test.py",
+		"/home/jayantabhowmick/Downloads/vric_final2.yml",
+		"/tmp/mozilla_jayantabhowmick0/vric_final2.yml",
+		"/home/jayantabhowmick/workspace/opencv/samples/python/lk_homography.py",
+		"/home/jayantabhowmick/workspace/opencv/samples/python/lk_track.py",
+		"/home/jayantabhowmick/workspace/opencv/samples/python/dis_opt_flow.py",
+		"/home/jayantabhowmick/workspace/opencv/samples/python/opt_flow.py",
+		"/tmp/mozilla_jayantabhowmick0/veri_vric.yml",
+		"/home/jayantabhowmick/Downloads/veri_vric.yml",
+		"/home/jayantabhowmick/workspace/courses/data_and_visual_analytics/assignments/hw3/HW3-jbhowmick3/Q1/q1output1.tsv",
+		"/home/jayantabhowmick/workspace/courses/data_and_visual_analytics/assignments/hw3/HW3-jbhowmick3/Q1/q1output2.tsv",
+		"/home/jayantabhowmick/workspace/courses/data_and_visual_analytics/assignments/hw3/HW3-jbhowmick3/Q1/src/main/java/edu/gatech/cse6242/Q1.java",
+		"/tmp/mozilla_jayantabhowmick0/vaegan_base.yml",
+		"/home/jayantabhowmick/workspace/courses/data_and_visual_analytics/assignments/hw3/HW3-jbhowmick3/Q3/pig-output.txt",
+		"/home/jayantabhowmick/workspace/courses/data_and_visual_analytics/assignments/hw3/HW3-jbhowmick3/Q2/q2_results.csv",
+		"/home/jayantabhowmick/workspace/courses/data_and_visual_analytics/assignments/hw3/HW3-jbhowmick3/Q4/large.out",
+		"/home/jayantabhowmick/workspace/courses/data_and_visual_analytics/assignments/hw3/HW3-jbhowmick3/Q4/small.out",
+		"/home/jayantabhowmick/workspace/courses/data_and_visual_analytics/assignments/hw3/HW3-jbhowmick3/Q5/results.csv",
+		"/home/jayantabhowmick/workspace/courses/data_and_visual_analytics/assignments/hw3/HW3-jbhowmick3/Q3/part-v005-o000-r-00000",
+		"/home/jayantabhowmick/workspace/courses/data_and_visual_analytics/assignments/hw3/HW3-jbhowmick3/Q3/pig-script.txt",
+		"/home/jayantabhowmick/workspace/courses/data_and_visual_analytics/assignments/hw3/HW3-jbhowmick3/Q4/src/main/java/edu/gatech/cse6242/Q4.java",
+		"/home/jayantabhowmick/workspace/courses/data_and_visual_analytics/assignments/hw3/hw3-skeleton/Q1/src/main/java/edu/gatech/cse6242/Q1.java",
+		"/home/jayantabhowmick/workspace/music-compression/data/download.sh",
+		"/home/jayantabhowmick/workspace/courses/data_and_visual_analytics/assignments/hw3/hw3-skeleton/Q4/large.out",
+		"/home/jayantabhowmick/workspace/courses/data_and_visual_analytics/assignments/hw3/hw3-skeleton/Q5/results.csv",
+		"/home/jayantabhowmick/workspace/courses/data_and_visual_analytics/assignments/hw3/hw3-skeleton/Q4/src/main/java/edu/gatech/cse6242/Q4.java",
+		"/home/jayantabhowmick/workspace/courses/data_and_visual_analytics/assignments/hw3/hw3-skeleton/Q1/run2.sh",
+		"/home/jayantabhowmick/workspace/courses/data_and_visual_analytics/assignments/hw3/hw3-skeleton/Q4/small.tsv",
+		"/home/jayantabhowmick/workspace/courses/data_and_visual_analytics/assignments/hw3/hw3-skeleton/Q4/azure_config.txt",
+		"/home/jayantabhowmick/Downloads/part-r-00000",
+		"/home/jayantabhowmick/workspace/courses/data_and_visual_analytics/assignments/hw3/hw3-skeleton/Q4/small.out",
+		"/home/jayantabhowmick/workspace/courses/data_and_visual_analytics/assignments/hw3/hw3-skeleton/Q1/run1.sh",
+		"/home/jayantabhowmick/workspace/courses/data_and_visual_analytics/assignments/hw3/hw3-skeleton/Q3/part-v004-o000-r-00000(3)",
+		"/home/jayantabhowmick/workspace/courses/data_and_visual_analytics/assignments/hw3/hw3-skeleton/Q3/pig-output-small.txt",
+		"/home/jayantabhowmick/Downloads/part-v004-o000-r-00000",
+		"/home/jayantabhowmick/Downloads/part-v004-o000-r-00000(2)",
+		"/home/jayantabhowmick/Downloads/part-v004-o000-r-00000(1)",
+		"/home/jayantabhowmick/workspace/courses/data_and_visual_analytics/assignments/hw3/hw3-skeleton/Q2/q2_results.csv",
+		"/home/jayantabhowmick/workspace/courses/data_and_visual_analytics/assignments/hw3/hw3-skeleton/Q2/q2.scala",
+		"/tmp/mozilla_jayantabhowmick0/Shared_Contextual_Invariants.ipynb",
+		"/home/jayantabhowmick/workspace/Contextual-Invariants-for-ReID/veri_example.yml",
+		"/home/jayantabhowmick/workspace/Contextual-Invariants-for-ReID/vric_example.yml",
+		"/home/jayantabhowmick/workspace/Contextual-Invariants-for-ReID/crawlers/VeRiDataCrawler.py",
+		"/home/jayantabhowmick/Downloads/VRIC/vric_probe.txt",
+		"/home/jayantabhowmick/Downloads/VRIC/vric_gallery.txt",
+		"/home/jayantabhowmick/Downloads/VRIC/vric_train.txt",
+		"/home/jayantabhowmick/workspace/courses/computer_vision/assignments/ps3/steelworks_warpIm.png",
+		"/home/jayantabhowmick/workspace/courses/computer_vision/assignments/ps3/steelworks_mergeIm.png",
+		"/home/jayantabhowmick/workspace/courses/computer_vision/assignments/ps3/wdc_mergeIm.png",
+		"/home/jayantabhowmick/workspace/courses/computer_vision/assignments/ps3/crop_mergeIm.png",
+		"/home/jayantabhowmick/workspace/courses/computer_vision/assignments/ps3/wdc1.jpg",
+		"/home/jayantabhowmick/workspace/courses/computer_vision/assignments/ps3/wdc2.jpg",
+		"/home/jayantabhowmick/workspace/courses/computer_vision/assignments/ps3/crop_warpIm.png",
+		"/home/jayantabhowmick/workspace/courses/computer_vision/assignments/ps3/new_points_2.png",
+		"/home/jayantabhowmick/workspace/courses/computer_vision/assignments/ps3/new_points_1.png",
+		"/home/jayantabhowmick/Downloads/veri_example.yml",
+		"/tmp/mozilla_jayantabhowmick0/veri_base.yml",
+		"/home/jayantabhowmick/workspace/Weak-Supervision-Cascade/detectors/yolo_detector_utils/yolo_model.py",
+		"/home/jayantabhowmick/workspace/courses/computer_vision/assignments/ps3/warpImage.py",
+		"/home/jayantabhowmick/workspace/Weak-Supervision-Cascade/detectors/yolo.py",
+		"/home/jayantabhowmick/workspace/courses/computer_vision/assignments/ps3/getCorrespondences.py",
+		"/home/jayantabhowmick/workspace/courses/computer_vision/assignments/ps3/computeH.py"
+	],
+	"find":
+	{
+		"height": 58.0
+	},
+	"find_in_files":
+	{
+		"height": 142.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": true,
+		"find_history":
+		[
+			"65",
+			"convert_audio_to_tensors"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": true,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "models/cnn_genre_classifier.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3222,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								187,
+								187
+							]
+						],
+						"settings":
+						{
+							"SL.13.region_keys":
+							[
+							],
+							"SL.47.region_keys":
+							[
+							],
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "runner/train_classifier.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4715,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								223,
+								223
+							]
+						],
+						"settings":
+						{
+							"SL.48.region_keys":
+							[
+							],
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "dataset_loader/music_genre_loader.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2107,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1691,
+								1691
+							]
+						],
+						"settings":
+						{
+							"SL.49.region_keys":
+							[
+							],
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1311.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 32.0
+	},
+	"input":
+	{
+		"height": 52.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.SublimeLinter":
+	{
+		"height": 0.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "music-compression.sublime-project",
+	"replace":
+	{
+		"height": 60.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 136.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 574.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 278.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
