@@ -11,6 +11,7 @@ def parse_args():
   parser.add_argument('--data_dir', type=str, default='data/fma_xs/')
   parser.add_argument('--model_dir', type=str, default='model_logs/')
   parser.add_argument('--num_classes', type=int, default=8)
+  parser.add_argument('--snippet_len', type=int, default=512*128)
 
   # Training setup
   parser.add_argument('--cuda', type=bool, default=True)

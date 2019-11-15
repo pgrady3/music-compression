@@ -27,11 +27,13 @@ class TrainerFrequencyAutoencoder(object):
     dataloader_args = {'num_workers': args.num_workers, 'pin_memory': True,
                        'batch_size': args.batch_size, 'shuffle': True}
 
-    self.train_dataset = MusicLoaderSTFT(args.data_dir, split='train')
+    self.train_dataset = MusicLoaderSTFT(
+        args.data_dir, split='train', snippet_size=args.snippet_len)
     self.train_loader = torch.utils.data.DataLoader(
         self.train_dataset, **dataloader_args)
 
-    self.test_dataset = MusicLoaderSTFT(args.data_dir, split='test')
+    self.test_dataset = MusicLoaderSTFT(
+        args.data_dir, split='test', snippet_size=args.snippet_len)
     self.test_loader = torch.utils.data.DataLoader(
         self.test_dataset, **dataloader_args)
 
@@ -163,6 +165,8 @@ class TrainerFrequencyAutoencoder(object):
       output_data, latent_data = self.model.forward(input_data)
       class_output = self.model_classifier.forward(latent_data)
       loss = self.model_classifier.loss_criterion(class_output, label_data)
+      #print(class_output, label_data)
+
       running_loss += loss.item() * input_data.size(0)
       num_examples += input_data.shape[0]
       _, preds = torch.max(class_output, 1)
