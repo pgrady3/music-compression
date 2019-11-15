@@ -131,6 +131,28 @@ class TrainerClassifier(object):
 
     return float(num_correct)/float(num_examples)
 
+  def get_accuracy_voting(self, num_examples):
+    '''
+    Get the accuracy on the test dataset
+    '''
+    self.model.eval()
+
+    num_examples = 0
+    num_correct = 0
+    for batch_idx, batch in enumerate(self.test_loader):
+      if self.cuda:
+        input_data, target_data = Variable(
+            batch[0]).cuda(), Variable(batch[1]).cuda()
+      else:
+        input_data, target_data = Variable(batch[0]), Variable(batch[1])
+
+      num_examples += input_data.shape[0]
+      output_data = self.model.forward(input_data)
+      predicted_labels = torch.argmax(output_data, dim=1)
+      num_correct += torch.sum(predicted_labels == target_data).cpu().item()
+
+    return float(num_correct)/float(num_examples)
+
   def plot_loss_history(self, mode='train'):
     plt.figure()
     if mode == 'train':

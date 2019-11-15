@@ -2,6 +2,7 @@ data/fma*
 .vscode/*
 *.wav
 model_logs/
+*.sublime-project
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
